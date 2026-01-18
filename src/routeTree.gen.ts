@@ -10,33 +10,53 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as RevogridIndexRouteImport } from './routes/revogrid/index'
+import { Route as GlideIndexRouteImport } from './routes/glide/index'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const RevogridIndexRoute = RevogridIndexRouteImport.update({
+  id: '/revogrid/',
+  path: '/revogrid/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GlideIndexRoute = GlideIndexRouteImport.update({
+  id: '/glide/',
+  path: '/glide/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/glide/': typeof GlideIndexRoute
+  '/revogrid/': typeof RevogridIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/glide': typeof GlideIndexRoute
+  '/revogrid': typeof RevogridIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/glide/': typeof GlideIndexRoute
+  '/revogrid/': typeof RevogridIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths: '/' | '/glide/' | '/revogrid/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/' | '/glide' | '/revogrid'
+  id: '__root__' | '/' | '/glide/' | '/revogrid/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  GlideIndexRoute: typeof GlideIndexRoute
+  RevogridIndexRoute: typeof RevogridIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +68,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/revogrid/': {
+      id: '/revogrid/'
+      path: '/revogrid'
+      fullPath: '/revogrid/'
+      preLoaderRoute: typeof RevogridIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/glide/': {
+      id: '/glide/'
+      path: '/glide'
+      fullPath: '/glide/'
+      preLoaderRoute: typeof GlideIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  GlideIndexRoute: GlideIndexRoute,
+  RevogridIndexRoute: RevogridIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
